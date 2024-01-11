@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="colorBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <!-- Color de fondo del cuadro del TextInputLayout -->
+        <item name="boxBackgroundColor">#FFFFFF</item>
+
+        <!-- Color del borde del cuadro del TextInputLayout -->
+        <item name="boxStrokeColor">@color/color_principal</item>
+
+        <!-- Color del texto del hint -->
+        <item name="android:textColorHint">@color/color_letra</item>
+
+        <!-- Color del texto de la etiqueta -->
+        <item name="android:textColor">@color/black</item>
+
+        <item name="hintTextColor">@color/color_letra</item>
+        <item name="endIconTint">@color/color_principal</item>
+        <item name="startIconTint">@color/color_principal</item>
+    </style>
+
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/searchview_background</item>
+        <item name="android:iconifiedByDefault">false</item>
+        <item name="android:queryBackground">@android:color/transparent</item>
+        <item name="android:queryHint">@string/search_hint</item>
+    </style>
+</resources>

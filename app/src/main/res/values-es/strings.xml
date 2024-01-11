@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EventConnect</string>
+    <string name="register_button_text">Registrar</string>
+    <string name="login_button_text">Iniciar sesión</string>
+    <string name="msg_fields_required">Por favor, complete todos los campos</string>
+    <string name="msg_successful_registration">Registro exitoso</string>
+    <string name="msg_invalid_email">La dirección de correo electrónico no es correcta</string>
+    <string name="msg_invalid_password">La contraseña debe tener al menos 6 caracteres, una letra y un número</string>
+    <string name="msg_invalid_phone">El número de teléfono no es correcto</string>
+    <string name="msg_registration_error">Error al registrar el usuario</string>
+    <string name="name">Nombre</string>
+    <string name="last_name">Apellidos</string>
+    <string name="phone">Teléfono</string>
+    <string name="email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="msg_user_already_exists">El usuario ya existe</string>
+    <string name="msg_verification_email_sent">Correo de verificación enviado. Por favor, revisa tu correo electrónico</string>
+    <string name="msg_verification_email_error">Error al enviar el correo de verificación. Por favor, inténtalo nuevamente más tarde</string>
+    <string name="forgot_password">¿Contraseña olvidada?</string>
+    <string name="not_registered">¿No estás registrado?</string>
+    <string name="sign_up">Regístrate</string>
+    <string name="sign_in_with_google">Iniciar sesión con Google</string>
+    <string name="msg_successful_login">Inicio de sesión exitoso</string>
+    <string name="msg_verify_email_for_login">Verifica tu dirección de correo electrónico para iniciar sesión</string>
+    <string name="msg_login_error">Error en el inicio de sesión. Verifica tus credenciales</string>
+    <string name="enter_your_email">Introduce tu correo electrónico</string>
+    <string name="reset">Restablecer</string>
+    <string name="enter_your_email_2">Por favor, ingresa tu dirección de correo electrónico</string>
+    <string name="reset_email_sent">Se ha enviado un correo electrónico para restablecer la contraseña</string>
+    <string name="reset_email_error">Error al enviar el correo electrónico de restablecimiento de contraseña</string>
+    <string name="msg_google_sign_in_failed">Error al iniciar sesión con Google. Por favor, inténtalo de nuevo</string>
+    <string name="msg_successful_google_sign_in">Inicio de sesión con Google exitoso. ¡Bienvenido!</string>
+    <string name="navigation_drawer_open">Abrir menú</string>
+    <string name="navigation_drawer_close">Cerrar menú</string>
+    <string name="search_hint">Buscar eventos</string>
+</resources>

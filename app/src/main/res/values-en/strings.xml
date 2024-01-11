@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EventConnect</string>
+    <string name="register_button_text">Register</string>
+    <string name="login_button_text">Login</string>
+    <string name="msg_fields_required">Please complete all fields</string>
+    <string name="msg_successful_registration">Successful registration</string>
+    <string name="msg_invalid_email">The email address is not correct</string>
+    <string name="msg_invalid_password">The password must be at least 6 characters long, containing at least one letter and one number</string>
+    <string name="msg_invalid_phone">The phone number is not correct</string>
+    <string name="msg_registration_error">Error registering user</string>
+    <string name="name">Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone">Phone</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="msg_user_already_exists">The user already exists</string>
+    <string name="msg_verification_email_sent">Verification email sent. Please check your email</string>
+    <string name="msg_verification_email_error">Error sending verification email. Please try again later</string>
+    <string name="forgot_password">Forgotten password?</string>
+    <string name="not_registered">Not registered yet?</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="msg_successful_login">Successful login</string>
+    <string name="msg_verify_email_for_login">Check your email address to log in</string>
+    <string name="msg_login_error">Login error. Check your credentials</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="reset">Reset</string>
+    <string name="enter_your_email_2">Please enter your email address</string>
+    <string name="reset_email_sent">A reset email has been sent</string>
+    <string name="reset_email_error">Error sending password reset email</string>
+    <string name="msg_google_sign_in_failed">Failed to sign in with Google. Please try again</string>
+    <string name="msg_successful_google_sign_in">Google Sign-In successful. Welcome!</string>
+    <string name="navigation_drawer_open">Open Drawer</string>
+    <string name="navigation_drawer_close">Close Drawer</string>
+    <string name="search_hint">Search for events</string>
+</resources>

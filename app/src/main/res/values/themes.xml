@@ -1,0 +1,12 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.EventConnect" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/color_principal</item>
+        <item name="colorSecondary">@color/color_letra</item>
+        <item name="actionBarItemBackground">@color/color_principal</item>
+    </style>
+
+    <style name="Theme.EventConnect" parent="Base.Theme.EventConnect" />
+</resources>

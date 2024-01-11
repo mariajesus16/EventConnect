@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "955484201288",
+    "firebase_url": "https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "eventconnect-150ed",
+    "storage_bucket": "eventconnect-150ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:955484201288:android:f38eb9adb548670a7a137d",
+        "android_client_info": {
+          "package_name": "com.example.eventconnect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "955484201288-u9b8gbjdqu6qp8bgcfjeosaaq08f2mli.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.eventconnect",
+            "certificate_hash": "45b5fe6c583d6f21c84913d10184dc8c0947d281"
+          }
+        },
+        {
+          "client_id": "955484201288-59j0lamv22ou8ca1rb7qerft822jjn9p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBA-HlXi2wa70kGFhl12Vgwnj75bB6bBw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "955484201288-59j0lamv22ou8ca1rb7qerft822jjn9p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
