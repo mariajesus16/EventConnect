@@ -2,26 +2,26 @@
     <item
         android:id="@+id/home"
         android:enabled="true"
-        android:icon="@drawable/ic_share"
+        android:icon="@drawable/ic_home"
         android:title="" />
-    <item
-        android:id="@+id/search"
-        android:enabled="true"
-        android:icon="@drawable/ic_share"
-        android:title=""/>
     <item
         android:id="@+id/favorite"
         android:enabled="true"
-        android:icon="@drawable/ic_share"
+        android:icon="@drawable/ic_favorite"
         android:title=""/>
     <item
-        android:id="@+id/entradas"
+        android:id="@+id/tickets"
         android:enabled="true"
-        android:icon="@drawable/ic_share"
+        android:icon="@drawable/ic_tickets"
         android:title=""/>
     <item
         android:id="@+id/perfil"
         android:enabled="true"
-        android:icon="@drawable/ic_share"
+        android:icon="@drawable/ic_perfil"
+        android:title=""/>
+    <item
+        android:id="@+id/settings"
+        android:enabled="true"
+        android:icon="@drawable/ic_settings"
         android:title=""/>
 </menu>

@@ -34,4 +34,13 @@
     <string name="navigation_drawer_open">Abrir menú</string>
     <string name="navigation_drawer_close">Cerrar menú</string>
     <string name="search_hint">Buscar eventos</string>
+    <string name="like">Me gusta</string>
+    <string name="my_tickets">Mis entradas</string>
+    <string name="logout_success">Sesión cerrada correctamente</string>
+    <string name="settings">Ajustes</string>
+    <string name="confirmation">Confirmación</string>
+    <string name="confirm_delete_account">¿Estás seguro de que deseas eliminar tu cuenta?</string>
+    <string name="delete">Eliminar</string>
+    <string name="account_deleted_success">Cuenta borrada correctamente</string>
+    <string name="cancel">Cancelar</string>
 </resources>

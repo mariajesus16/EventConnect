@@ -15,10 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EventConnect"
         tools:targetApi="31">
-        <activity
-            android:name=".SearchActivity"
-            android:exported="false" />
-
         <meta-data
             android:name="com.google.android.gms.auth.api.credentials.google_sign_in_api_key"
             android:value="AIzaSyBBA-HlXi2wa70kGFhl12Vgwnj75bB6bBw" />
@@ -36,12 +32,21 @@
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Splash"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>

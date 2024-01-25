@@ -123,7 +123,7 @@
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/ic_calendar" />
+                android:src="@drawable/ic_home" />
 
             <TextView
                 android:id="@+id/calendarText"

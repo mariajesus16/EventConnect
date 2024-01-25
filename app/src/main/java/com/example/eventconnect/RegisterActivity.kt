@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.database.FirebaseDatabase
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var etNombre: EditText
@@ -71,15 +72,17 @@ class RegisterActivity : AppCompatActivity() {
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
             val telefono = etTelefono.text.toString().trim()
+            val nombre = etNombre.text.toString().trim()
+            val apellido = etApellido.text.toString().trim()
 
             if (validateFields(email, password, telefono)) {
-                registerUser(email, password)
+                registerUser(email, password, nombre, apellido)
             }
         }
     }
 
-    private fun registerUser(email: String, password: String) {
-        if (email.isEmpty() || password.isEmpty()) {
+    private fun registerUser(email: String, password: String, nombre: String, apellido: String) {
+        if (email.isEmpty() || password.isEmpty() || nombre.isEmpty() || apellido.isEmpty()) {
             showToast(R.string.msg_fields_required)
             return
         }
@@ -87,6 +90,14 @@ class RegisterActivity : AppCompatActivity() {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    val user = firebaseAuth.currentUser
+                    val userId = user?.uid
+
+                    if (userId != null) {
+                        // Guardar nombre y apellido en Firebase Realtime Database
+                        guardarNombreApellidoEnFirebase(userId, nombre, apellido)
+                    }
+
                     showToast(R.string.msg_successful_registration)
                     sendEmailVerification()
 
@@ -173,5 +184,19 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun showToast(messageResId: Int) {
         Toast.makeText(this, getString(messageResId), Toast.LENGTH_SHORT).show()
+    }
+    private fun guardarNombreApellidoEnFirebase(userId: String, nombre: String, apellido: String) {
+        val databaseReference = FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/").reference
+        val usuarioRef = databaseReference.child("usuarios").child(userId)
+
+        // Guardar nombre y apellido en Firebase Realtime Database
+        usuarioRef.child("nombrePerfil").setValue("$nombre $apellido")
+            .addOnSuccessListener {
+                // Éxito al guardar el nombre y apellido
+            }
+            .addOnFailureListener { e ->
+                // Error al guardar el nombre y apellido
+                Log.e("FirebaseDatabaseError", "Error al guardar nombre y apellido: $e")
+            }
     }
 }

@@ -3,5 +3,10 @@
     <style name="Base.Theme.EventConnect" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/color_principal</item>
+        <item name="colorSecondary">@color/color_letra</item>
+        <item name="actionBarItemBackground">@color/color_principal</item>
     </style>
+
+    <style name="Theme.EventConnect" parent="Base.Theme.EventConnect" />
 </resources>

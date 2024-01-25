@@ -1,0 +1,162 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".SearchFragment">
+
+    <!-- Toolbar con SearchView -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:theme="?attr/actionBarTheme"
+        app:popupTheme="?attr/actionBarPopupTheme">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:iconifiedByDefault="false"
+            app:queryHint="Buscar..."
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <!-- Contenido Principal -->
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar">
+
+        <!-- Botón de Ubicación -->
+        <RelativeLayout
+            android:id="@+id/locationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_below="@id/searchView"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="-147dp"
+            android:layout_toStartOf="@+id/filterButton"
+            android:background="?android:attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/locationIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_place" />
+
+            <TextView
+                android:id="@+id/cityName"
+                android:layout_width="97dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="4dp"
+                android:layout_toStartOf="@+id/checkIcon"
+                android:layout_toEndOf="@id/locationIcon"
+                android:text="Sevilla werwerwer"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/checkIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_expandmore" />
+
+        </RelativeLayout>
+
+        <!-- Botón de Filtros -->
+
+        <!-- Botón de Calendario -->
+
+        <!-- Botón de Calendario -->
+
+        <RelativeLayout
+            android:id="@+id/filterButton"
+            android:layout_width="171dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/cityName"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginEnd="8dp"
+            android:background="?android:attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/filterIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_filter" />
+
+            <TextView
+                android:id="@+id/filterText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@id/filterIcon"
+                android:text="Filtros"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/filterCheckIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_expandmore" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/calendarButton"
+            android:layout_width="141dp"
+            android:layout_height="46dp"
+            android:layout_below="@id/cityName"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="18dp"
+            android:layout_toEndOf="@+id/filterButton"
+            android:background="?android:attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/calendarIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_home" />
+
+            <TextView
+                android:id="@+id/calendarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@id/calendarIcon"
+                android:text="Calendario"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/calendarCheckIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_expandmore" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

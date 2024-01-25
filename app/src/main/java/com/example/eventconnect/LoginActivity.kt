@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -20,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.FirebaseDatabase
 
 class LoginActivity : AppCompatActivity() {
 
@@ -151,6 +153,25 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Inicio de sesión con Google exitoso, realiza acciones adicionales si es necesario
                     val user = auth.currentUser
+                    user?.uid?.let { userId ->
+                        // Guardar el userId en las preferencias compartidas
+                        val sharedPreferences: SharedPreferences =
+                            PreferenceManager.getDefaultSharedPreferences(this@LoginActivity)
+                        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+                        editor.putString("userId", userId)
+                        editor.apply()
+                    }
+                    // Obtener información del usuario de Google
+                    val googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this)
+                    val nombre = googleSignInAccount?.givenName
+                    val apellido = googleSignInAccount?.familyName
+                    val gmail = googleSignInAccount?.email
+
+                    // Guardar el nombre y el apellido en Firebase Realtime Database
+                    if (user != null && nombre != null && apellido != null && gmail != null) {
+                        guardarNombreApellidoEnFirebase(user.uid, nombre, apellido, gmail)
+                    }
+
                     showToast(R.string.msg_successful_google_sign_in)
 
                     // Puedes redirigir al usuario a la siguiente actividad aquí
@@ -190,6 +211,21 @@ class LoginActivity : AppCompatActivity() {
                     // Error en el inicio de sesión
                     showToast(R.string.msg_login_error)
                 }
+            }
+    }
+    private fun guardarNombreApellidoEnFirebase(userId: String, nombre: String, apellido: String, gmail: String) {
+        val databaseReference = FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/").reference
+        val usuarioRef = databaseReference.child("usuarios").child(userId)
+
+        // Guardar nombre y apellido en Firebase Realtime Database
+        usuarioRef.child("nombrePerfil").setValue("$nombre $apellido")
+        usuarioRef.child("correo").setValue(gmail)
+            .addOnSuccessListener {
+                // Éxito al guardar el nombre y el apellido
+            }
+            .addOnFailureListener { e ->
+                // Error al guardar el nombre y el apellido
+                Log.e("FirebaseDatabaseError", "Error al guardar nombre y apellido: $e")
             }
     }
 

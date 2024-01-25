@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Primer bloque de textos: Sugerencias -->
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/white">
+
+                <ImageView
+                    android:id="@+id/logoImageView"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:contentDescription="Logo"
+                    android:src="@drawable/logo" />
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ajustes"
+                    android:textAlignment="center"
+                    android:textColor="@color/color_letra"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </androidx.appcompat.widget.Toolbar>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="10dp"
+                android:text="Sugerecias"
+                android:textColor="@color/color_principal"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:ignore="SmallSp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:text="Preguntas frecuentes"
+                android:textSize="18dp"
+                app:drawableStartCompat="@drawable/ic_question" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:text="Notificaciones"
+                android:textSize="18dp"
+                app:drawableStartCompat="@drawable/ic_notifica" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:text="Valora nuestra app"
+                android:textSize="18dp"
+                app:drawableStartCompat="@drawable/ic_value" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:text="Comparte nuestra app"
+                android:textSize="18dp"
+                app:drawableStartCompat="@drawable/ic_share" />
+
+            <!-- Segundo bloque de textos: General -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
+                android:text="General"
+                android:textColor="@color/color_principal"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:ignore="SmallSp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:text="Cambiar el idioma"
+                android:textSize="18dp"
+                app:drawableStartCompat="@drawable/ic_idioma" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:text="Consejos legales"
+                android:textSize="18dp"
+                app:drawableStartCompat="@drawable/ic_legal_advice" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:text="Síguenos en"
+                android:textSize="18dp"
+                app:drawableStartCompat="@drawable/ic_follow" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:text="Contáctanos"
+                android:textSize="18dp"
+                app:drawableStartCompat="@drawable/ic_contact" />
+
+            <!-- Tercer bloque de textos: Cuenta -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
+                android:text="Cuenta"
+                android:textColor="@color/color_principal"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:ignore="SmallSp" />
+
+            <TextView
+                android:id="@+id/tCerrarSesion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:text="Cerrar sesión"
+                android:textSize="18dp"
+                app:drawableStartCompat="@drawable/ic_close_sesion"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/tBorrarCuenta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:text="Eliminar mi cuenta"
+                android:textSize="18dp"
+                app:drawableStartCompat="@drawable/ic_delete"
+                android:focusable="true" />
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
