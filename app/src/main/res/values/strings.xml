@@ -44,4 +44,7 @@
     <string name="delete">Delete</string>
     <string name="account_deleted_success">Account deleted successfully</string>
     <string name="cancel">Cancel</string>
+    <string name="get_tickets">Get Tickets</string>
+    <string name="yes">Yes</string>
+    <string name="access_to_buy_ticket">Do you want to access to buy the ticket?</string>
 </resources>

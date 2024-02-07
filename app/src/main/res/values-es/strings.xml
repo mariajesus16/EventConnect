@@ -43,4 +43,7 @@
     <string name="delete">Eliminar</string>
     <string name="account_deleted_success">Cuenta borrada correctamente</string>
     <string name="cancel">Cancelar</string>
+    <string name="get_tickets">Conseguir entradas</string>
+    <string name="yes">Sí</string>
+    <string name="access_to_buy_ticket">¿Quieres acceder para comprar la entrada?</string>
 </resources>
