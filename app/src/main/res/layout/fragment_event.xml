@@ -3,6 +3,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EventFragment">
+    tools:context=".user.EventFragment">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Aquí puedes incluir tu imagen del evento -->
+            <ImageView
+                android:id="@+id/imageEvento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop" />
+
+            <!-- Aquí puedes incluir el nombre del evento -->
+            <TextView
+                android:id="@+id/nombreEvento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:padding="16dp" />
+
+            <!-- Otros elementos del evento como detalles adicionales pueden ir aquí -->
+
+        </LinearLayout>
+    </ScrollView>
 </FrameLayout>

@@ -1,10 +1,11 @@
-package com.example.eventconnect
+package com.example.eventconnect.user
 
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.fragment.app.Fragment
+import com.example.eventconnect.R
 
 class MenuActivity : AppCompatActivity() {
 
@@ -57,4 +58,3 @@ class MenuActivity : AppCompatActivity() {
             .commit()
     }
 }
-

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context=".EventActivity">
+    tools:context=".user.EventActivity">
 
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -23,7 +23,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/white"
-        tools:context=".EventActivity">
+        tools:context=".user.EventActivity">
 
         <FrameLayout
             android:id="@+id/fragment_container_event"

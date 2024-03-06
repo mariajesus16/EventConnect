@@ -1,4 +1,4 @@
-package com.example.eventconnect
+package com.example.eventconnect.admin
 
 import android.content.Context
 import android.content.Intent
@@ -12,10 +12,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import android.widget.SearchView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.eventconnect.Evento
+import com.example.eventconnect.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -29,18 +32,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-
-class HomeFragment : Fragment() {
+class AdminHomeFragment : Fragment() {
     private lateinit var sharedPreferences: SharedPreferences
 
     private val EVENT_ID_KEY = "eventId"
@@ -51,6 +43,8 @@ class HomeFragment : Fragment() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var eventosRef: DatabaseReference
     private lateinit var favoritesRef: DatabaseReference
+    private lateinit var searchView: SearchView
+    private var searchText: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -72,13 +66,34 @@ class HomeFragment : Fragment() {
         favoritesRef = database.getReference("favoritos")
 
         // Obtén referencias a tus vistas
+        searchView = view.findViewById(R.id.searchView)
         scrollView = view.findViewById(R.id.scrollView)
         linearLayout = view.findViewById(R.id.dynamicContent)
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // Este método se llama cuando se presiona el botón de búsqueda o se envía el texto de búsqueda.
+                query?.let {
+                    searchText = it
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Este método se llama cuando cambia el texto en el SearchView.
+                newText?.let {
+                    searchText = it
+                }
+                return true
+            }
+        })
 
         obtenerListaDeEventos { listaEventos ->
             if (listaEventos != null) {
                 // La lista de eventos se obtuvo exitosamente
                 // Itera sobre la lista de eventos y agrega dinámicamente los elementos al LinearLayout
+
+                val listaEventosFiltrada = listaEventos.filter { it -> it.ciudad == searchText  }
                 for (evento in listaEventos) {
                     // Crear el diseño de la tarjeta
                     val cardView = CardView(requireContext())
@@ -107,7 +122,7 @@ class HomeFragment : Fragment() {
                         resources.getDimensionPixelSize(R.dimen.card_image_height)
                     )
                     imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-                    cargarImagenEvento(evento.id) { imageUrl ->
+                    cargarImagenEvento(evento.id!!) { imageUrl ->
                         if (!imageUrl.isNullOrEmpty()) {
                             // La URL de la imagen no está vacía, la cargamos en el ImageView
                             Picasso.get().load(imageUrl).into(imageView)
@@ -157,10 +172,10 @@ class HomeFragment : Fragment() {
                     )
                     dateTextView.layoutParams = dateLayoutParams
                     // Formatear la fecha
-                    val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                    val inputFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
                     val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                     val formattedDate =
-                        inputFormat.parse(evento.date)?.let { outputFormat.format(it) }
+                        inputFormat.parse(evento.date!!)?.let { outputFormat.format(it) }
 
                     dateTextView.text = formattedDate
                     dateTextView.gravity = Gravity.START // Alinear a la izquierda
@@ -218,8 +233,8 @@ class HomeFragment : Fragment() {
                     // Configurar el OnClickListener para la tarjeta
                     cardView.setOnClickListener {
 
-                        saveEventId(evento.id)
-                        val intent = Intent(requireActivity(), EventActivity::class.java)
+                        saveEventId(evento.id!!)
+                        val intent = Intent(requireActivity(), AdminEventActivity::class.java)
                         startActivity(intent)
 
                     }
@@ -237,28 +252,10 @@ class HomeFragment : Fragment() {
         return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
-
     // Función para obtener la lista de eventos desde Firebase Realtime Database
     fun obtenerListaDeEventos(callback: (List<Evento>?) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/").reference
+        val eventosRef = databaseReference.child("eventos")
         eventosRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val listaEventos = mutableListOf<Evento>()
@@ -271,22 +268,29 @@ class HomeFragment : Fragment() {
                     val lugar = eventSnapshot.child("lugar").getValue(String::class.java)
                     val name = eventSnapshot.child("name").getValue(String::class.java)
                     val imageUrl = eventSnapshot.child("imagenUrl").getValue(String::class.java)
-                    if (!id.isEmpty() && ciudad != null && date != null && info != null &&
+
+                    // Verificar que todos los campos necesarios no sean nulos o vacíos
+                    if (id.isNotEmpty() && ciudad != null && date != null && info != null &&
                         link != null && lugar != null && name != null && imageUrl != null
                     ) {
-                        val evento = Evento(id, ciudad, date, info, link, lugar, name, imageUrl)
+                        // Crear un objeto Evento con los datos obtenidos y agregarlo a la lista
+                        val evento = Evento(id, name, ciudad, lugar, link, info, date, imageUrl)
                         listaEventos.add(evento)
                     }
                 }
                 callback(listaEventos)
+                // Agregar log para imprimir los eventos obtenidos
+                listaEventos.forEach {
+                    println("Evento: $it")
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Manejar errores de lectura de la base de datos
                 callback(null)
             }
         })
     }
+
 
 
     fun guardarFavorito(userId: String?, eventId: String) {

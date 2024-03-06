@@ -16,7 +16,13 @@
         android:theme="@style/Theme.EventConnect"
         tools:targetApi="31">
         <activity
-            android:name=".EventActivity"
+            android:name=".admin.AdminEventActivity"
+            android:exported="false" />
+        <activity
+            android:name=".admin.AdminMenuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".user.EventActivity"
             android:exported="false" />
 
         <meta-data
@@ -27,7 +33,7 @@
             android:name=".ForgotPassActivity"
             android:exported="false" />
         <activity
-            android:name=".MenuActivity"
+            android:name=".user.MenuActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

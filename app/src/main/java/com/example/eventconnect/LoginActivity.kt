@@ -14,6 +14,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.example.eventconnect.admin.AdminMenuActivity
+import com.example.eventconnect.user.MenuActivity
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
@@ -89,13 +91,13 @@ class LoginActivity : AppCompatActivity() {
         }
 
         // Verifica si el usuario ya está autenticado y tiene un ID guardado
-        val savedUserId = sharedPreferences.getString("userId", null)
+        /*val savedUserId = sharedPreferences.getString("userId", null)
         if (auth.currentUser != null && savedUserId != null) {
             // El usuario está autenticado y tiene un ID guardado, abre directamente el menú
             val menu = Intent(this@LoginActivity, MenuActivity::class.java)
             startActivity(menu)
             finish()
-        }
+        }*/
 
         registerText.setOnClickListener {
             val registro = Intent(this@LoginActivity, RegisterActivity::class.java)
@@ -190,17 +192,23 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-                    if (user != null && user.isEmailVerified) {
+                    if (user != null && user.isEmailVerified ||user != null && email == "admin@admin.com") {
                         // Inicio de sesión exitoso y correo electrónico verificado
                         showToast(R.string.msg_successful_login)
 
                         // Guardar el ID del usuario en SharedPreferences
-                        sharedPreferences.edit().putString("userId", user.uid).apply()
+                        // sharedPreferences.edit().putString("userId", user.uid).apply()
 
-                        // Puedes redirigir al usuario a la siguiente actividad aquí
-                        val menu = Intent(this@LoginActivity, MenuActivity::class.java)
-                        startActivity(menu)
-
+                        if (email == "admin@admin.com")
+                        {
+                            // admin
+                            val admin = Intent(this@LoginActivity, AdminMenuActivity::class.java)
+                            startActivity(admin)
+                        } else {
+                            // user
+                            val menu = Intent(this@LoginActivity, MenuActivity::class.java)
+                            startActivity(menu)
+                        }
                         finish()
 
                     } else {

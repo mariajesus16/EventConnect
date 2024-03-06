@@ -128,7 +128,6 @@ class RegisterActivity : AppCompatActivity() {
                     showToast(R.string.msg_verification_email_sent)
                     // Puedes redirigir al usuario a una actividad de verificación o simplemente mostrar un mensaje
                 } else {
-                    Log.e("FirebaseAuthException", "Error sending verification email: ${task.exception}")
                     showToast(R.string.msg_verification_email_error)
                 }
             }

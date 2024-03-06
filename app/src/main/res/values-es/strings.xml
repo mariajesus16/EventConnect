@@ -46,4 +46,19 @@
     <string name="get_tickets">Conseguir entradas</string>
     <string name="yes">Sí</string>
     <string name="access_to_buy_ticket">¿Quieres acceder para comprar la entrada?</string>
+    <string name="add_event">Añadir evento</string>
+    <string name="city">Ciudad</string>
+    <string name="place">Lugar</string>
+    <string name="date">Fecha</string>
+    <string name="information">Información</string>
+    <string name="link">Enlace</string>
+    <string name="add_button_text">Añadir</string>
+    <string name="event_added_success">Evento agregado correctamente</string>
+    <string name="event_add_error">Error al agregar el evento</string>
+    <string name="english">Inglés</string>
+    <string name="spanish">Español</string>
+    <string name="image">Imagen</string>
+    <string name="select_image">Seleccionar imagen</string>
+    <string name="profile_photo_updated_success">Foto de perfil actualizada correctamente</string>
+
 </resources>

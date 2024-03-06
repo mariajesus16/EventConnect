@@ -46,4 +46,19 @@
     <string name="get_tickets">Get Tickets</string>
     <string name="yes">Yes</string>
     <string name="access_to_buy_ticket">Do you want to access to buy the ticket?</string>
+    <string name="add_event">Add Event</string>
+    <string name="city">City</string>
+    <string name="place">Place</string>
+    <string name="date">Date</string>
+    <string name="information">Information</string>
+    <string name="link">Link</string>
+    <string name="add_button_text">Add</string>
+    <string name="event_added_success">Event added successfully</string>
+    <string name="event_add_error">Error adding event</string>
+    <string name="english">English</string>
+    <string name="spanish">Spanish</string>
+    <string name="image">Image</string>
+    <string name="select_image">Select Image</string>
+    <string name="profile_photo_updated_success">Profile photo updated successfully</string>
+
 </resources>

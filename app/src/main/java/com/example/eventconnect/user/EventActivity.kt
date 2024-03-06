@@ -1,4 +1,4 @@
-package com.example.eventconnect
+package com.example.eventconnect.user
 
 import android.app.AlertDialog
 import android.content.Context
@@ -10,6 +10,8 @@ import android.widget.Button
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.eventconnect.Evento
+import com.example.eventconnect.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -55,6 +57,8 @@ class EventActivity : AppCompatActivity() {
             builder.setPositiveButton(getString(R.string.yes)) { dialog, which ->
                 // Acción cuando se selecciona "Sí"
                 // Abrir el enlace del evento en un navegador web
+
+
                 eventId?.let { it1 ->
                     getEventFromFirebase(it1) { evento ->
                         val url = evento?.link

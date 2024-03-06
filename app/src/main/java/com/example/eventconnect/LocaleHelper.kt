@@ -9,7 +9,7 @@ import java.util.Locale
 class LocaleHelper {
 
     companion object {
-        private const val PREF_LANG = "app_lang"
+        const val PREF_LANG = "app_lang"
 
         fun setLocale(context: Context, language: String) {
             val locale = Locale(language)
