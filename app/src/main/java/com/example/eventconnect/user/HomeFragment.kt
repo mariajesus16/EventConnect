@@ -32,12 +32,6 @@ import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-
 class HomeFragment : Fragment() {
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -51,9 +45,6 @@ class HomeFragment : Fragment() {
     private lateinit var favoritesRef: DatabaseReference
     private lateinit var searchView: SearchView
     private var searchText: String = ""
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -76,11 +67,15 @@ class HomeFragment : Fragment() {
         scrollView = view.findViewById(R.id.scrollView)
         linearLayout = view.findViewById(R.id.dynamicContent)
 
+        actualizarListaEventos(searchText)
+
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 // Este método se llama cuando se presiona el botón de búsqueda o se envía el texto de búsqueda.
                 query?.let {
                     searchText = it
+                    // Actualizar la lista de eventos con el nuevo texto de búsqueda
+                    actualizarListaEventos(searchText)
                 }
                 return true
             }
@@ -89,18 +84,26 @@ class HomeFragment : Fragment() {
                 // Este método se llama cuando cambia el texto en el SearchView.
                 newText?.let {
                     searchText = it
+                    // Actualizar la lista de eventos con el nuevo texto de búsqueda
+                    actualizarListaEventos(searchText)
                 }
                 return true
             }
         })
 
-        obtenerListaDeEventos { listaEventos ->
+        return view
+    }
+
+    // Función para actualizar la lista de eventos según el texto de búsqueda
+    private fun actualizarListaEventos(searchText: String) {
+        obtenerListaDeEventos(searchText) { listaEventos ->
+            // Limpiar el LinearLayout antes de agregar nuevas tarjetas
+            linearLayout.removeAllViews()
             if (listaEventos != null) {
                 // La lista de eventos se obtuvo exitosamente
                 // Itera sobre la lista de eventos y agrega dinámicamente los elementos al LinearLayout
-
-                val listaEventosFiltrada = listaEventos.filter { it -> it.ciudad == searchText  }
                 for (evento in listaEventos) {
+                    // Código para agregar tarjetas de eventos aquí
                     // Crear el diseño de la tarjeta
                     val cardView = CardView(requireContext())
                     val cardLayoutParams = LinearLayout.LayoutParams(
@@ -225,24 +228,6 @@ class HomeFragment : Fragment() {
                     )
                     cardContentLayout.addView(cityTextView)
 
-                    // botón de favorito a la tarjeta
-                    /*
-                    val favoriteButton = ImageView(requireContext())
-                    val buttonLayoutParams = LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                    buttonLayoutParams.setMargins(
-                        resources.getDimensionPixelSize(R.dimen.card_text_margin_horizontal),
-                        resources.getDimensionPixelSize(R.dimen.card_text_margin_vertical),
-                        resources.getDimensionPixelSize(R.dimen.card_text_margin_horizontal),
-                        resources.getDimensionPixelSize(R.dimen.card_text_margin_vertical)
-                    )
-                    favoriteButton.layoutParams = buttonLayoutParams
-                    Picasso.get().load(R.drawable.logo).into(favoriteButton)
-
-                    cardContentLayout.addView(favoriteButton)
-                     */
                     // Configurar el OnClickListener para la tarjeta
                     cardView.setOnClickListener {
 
@@ -261,12 +246,10 @@ class HomeFragment : Fragment() {
                 // Ocurrió un error al obtener la lista de eventos
             }
         }
-
-        return view
     }
 
     // Función para obtener la lista de eventos desde Firebase Realtime Database
-    fun obtenerListaDeEventos(callback: (List<Evento>?) -> Unit) {
+    fun obtenerListaDeEventos(searchText: String, callback: (List<Evento>?) -> Unit) {
         val databaseReference = FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/").reference
         val eventosRef = databaseReference.child("eventos")
         eventosRef.addValueEventListener(object : ValueEventListener {
@@ -291,9 +274,15 @@ class HomeFragment : Fragment() {
                         listaEventos.add(evento)
                     }
                 }
-                callback(listaEventos)
+                // Filtrar la lista si hay un texto de búsqueda
+                val listaEventosFiltrada = if (searchText.isNotEmpty()) {
+                    listaEventos.filter { it.name!!.toUpperCase().contains(searchText.toUpperCase())}
+                } else {
+                    listaEventos
+                }
+                callback(listaEventosFiltrada)
                 // Agregar log para imprimir los eventos obtenidos
-                listaEventos.forEach {
+                listaEventosFiltrada.forEach {
                     println("Evento: $it")
                 }
             }

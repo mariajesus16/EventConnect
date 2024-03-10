@@ -5,18 +5,27 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.Fragment
 import com.example.eventconnect.CircleTransform
+import com.example.eventconnect.Evento
 import com.example.eventconnect.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -30,6 +39,8 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * A simple [Fragment] subclass.
@@ -41,6 +52,8 @@ class PerfilFragment : Fragment() {
     private lateinit var database: FirebaseDatabase
     private lateinit var userId: String
     private val PICK_IMAGE_REQUEST = 1
+    private lateinit var scrollView: HorizontalScrollView
+    private lateinit var linearLayout: LinearLayout
 
     private lateinit var storageRef: StorageReference
     private lateinit var firebaseAuth: FirebaseAuth
@@ -58,6 +71,9 @@ class PerfilFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_perfil, container, false)
+        scrollView = view.findViewById(R.id.horizontalScrollView)
+        linearLayout = view.findViewById(R.id.dynamicContent)
+
         profileImageView = view.findViewById(R.id.profileImageView)
         profileImageView.scaleType = ImageView.ScaleType.CENTER_CROP
 
@@ -88,6 +104,55 @@ class PerfilFragment : Fragment() {
         cargarImagenPerfilUsuario(userId)
         // Cargar el nombre y correo electrónico del perfil
         cargarDatosPerfilUsuario(userId)
+
+        obtenerEventosFavoritos(userId) { listaEventos ->
+            if (listaEventos != null) {
+                for (evento in listaEventos) {
+                    // Crear el diseño de la tarjeta
+                    val cardView = CardView(requireContext())
+                    val cardLayoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    cardLayoutParams.setMargins(
+                        resources.getDimensionPixelSize(R.dimen.card_margin_horizontal),
+                        resources.getDimensionPixelSize(R.dimen.card_margin_vertical),
+                        resources.getDimensionPixelSize(R.dimen.card_margin_horizontal),
+                        resources.getDimensionPixelSize(R.dimen.card_margin_vertical)
+                    )
+                    cardView.layoutParams = cardLayoutParams
+                    cardView.cardElevation = resources.getDimension(R.dimen.card_elevation)
+                    cardView.radius = resources.getDimension(R.dimen.card_corner_radius)
+
+                    // Configurar el diseño interno de la tarjeta
+                    val cardContentLayout = LinearLayout(requireContext())
+                    cardContentLayout.orientation = LinearLayout.HORIZONTAL
+
+                    // Agregar la imagen del evento a la tarjeta
+                    val imageView = ImageView(requireContext())
+                    imageView.layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        resources.getDimensionPixelSize(R.dimen.card_image_height)
+                    )
+                    imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                    cargarImagenEvento(evento.id!!) { imageUrl ->
+                        if (!imageUrl.isNullOrEmpty()) {
+                            // La URL de la imagen no está vacía, la cargamos en el ImageView
+                            Picasso.get().load(imageUrl).into(imageView)
+                        } else {
+                            // La URL de la imagen es nula o vacía, cargamos una imagen de error
+                            Picasso.get().load(R.drawable.logo).into(imageView)
+                        }
+                    }
+                    cardContentLayout.addView(imageView)
+
+                    // Agregar la tarjeta al contenedor lineal
+                    linearLayout.addView(cardView)
+                }
+            } else {
+                // Ocurrió un error al obtener la lista de eventos
+            }
+        }
         return view
     }
 
@@ -234,5 +299,101 @@ class PerfilFragment : Fragment() {
                     databaseError.toException().printStackTrace()
                 }
             })
+    }
+
+    fun obtenerEventosFavoritos(userId: String, callback: (List<Evento>?) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/").reference
+        val favoritosRef = databaseReference.child("favoritos").child(userId)
+
+        favoritosRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val eventIdList = mutableListOf<String>()
+
+                // Iterar sobre todas las entradas de la tabla de favoritos
+                for (favSnapshot in snapshot.children) {
+                    val eventId = favSnapshot.key // Obtiene el eventId de la entrada
+
+                    // Verificar si el valor es true y el eventId no es nulo
+                    if (eventId != null && favSnapshot.value as? Boolean == true) {
+                        eventIdList.add(eventId) // Agregar el eventId a la lista
+                    }
+                }
+
+                // Lista para almacenar los eventos
+                val listaEventos = mutableListOf<Evento>()
+
+                // Iterar sobre cada eventId y obtener el evento correspondiente
+                for (eventId in eventIdList) {
+                    getEventFromFirebase(eventId) { evento ->
+                        if (evento != null) {
+                            listaEventos.add(evento)
+                        }
+                        // Verificar si se han agregado todos los eventos
+                        if (listaEventos.size == eventIdList.size) {
+                            // Devolver la lista de eventos a través del callback
+                            callback(listaEventos)
+                        }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar la cancelación de la operación
+                callback(null)
+            }
+        })
+    }
+
+    private fun getEventFromFirebase(eventId: String, callback: (Evento?) -> Unit) {
+        val databaseReference =
+            FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/").reference
+        val eventosRef = databaseReference.child("eventos").child(eventId)
+
+        eventosRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                // Verificar si existe un evento con el ID proporcionado
+                if (snapshot.exists()) {
+                    // Obtener los datos del evento
+                    val ciudad = snapshot.child("ciudad").getValue(String::class.java) ?: ""
+                    val date = snapshot.child("date").getValue(String::class.java) ?: ""
+                    val info = snapshot.child("info").getValue(String::class.java) ?: ""
+                    val link = snapshot.child("link").getValue(String::class.java) ?: ""
+                    val lugar = snapshot.child("lugar").getValue(String::class.java) ?: ""
+                    val name = snapshot.child("name").getValue(String::class.java) ?: ""
+                    val imageUrl = snapshot.child("imagenUrl").getValue(String::class.java) ?: ""
+
+                    // Crear un objeto Evento con los datos obtenidos
+                    val evento = Evento(eventId, name, ciudad, lugar, link, info, date, imageUrl)
+                    // Devolver el objeto Evento a través del callback
+                    callback(evento)
+                } else {
+                    // El evento con el ID proporcionado no existe
+                    callback(null)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Ocurrió un error al obtener los datos, devolver null
+                callback(null)
+            }
+        })
+    }
+
+    fun cargarImagenEvento(eventoId: String, listener: (String?) -> Unit) {
+        val database =
+            FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/")
+        val eventoRef = database.reference.child("eventos").child(eventoId)
+
+        eventoRef.child("imagenUrl").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val imageUrl = dataSnapshot.value as String?
+                listener(imageUrl)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                databaseError.toException().printStackTrace()
+                listener(null)
+            }
+        })
     }
 }

@@ -53,7 +53,7 @@ class FavoriteFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        val view = inflater.inflate(R.layout.fragment_favorite, container, false)
         sharedPreferences =
             requireActivity().getSharedPreferences("event_prefs", Context.MODE_PRIVATE)
         firebaseAuth = FirebaseAuth.getInstance()
@@ -69,12 +69,17 @@ class FavoriteFragment : Fragment() {
         searchView = view.findViewById(R.id.searchView)
         scrollView = view.findViewById(R.id.scrollView)
         linearLayout = view.findViewById(R.id.dynamicContent)
+        val userId = firebaseAuth.currentUser?.uid
+
+        actualizarListaEventos(userId!!,searchText)
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 // Este método se llama cuando se presiona el botón de búsqueda o se envía el texto de búsqueda.
                 query?.let {
                     searchText = it
+                    // Actualizar la lista de eventos con el nuevo texto de búsqueda
+                    actualizarListaEventos(userId,searchText)
                 }
                 return true
             }
@@ -83,18 +88,25 @@ class FavoriteFragment : Fragment() {
                 // Este método se llama cuando cambia el texto en el SearchView.
                 newText?.let {
                     searchText = it
+                    // Actualizar la lista de eventos con el nuevo texto de búsqueda
+                    actualizarListaEventos(userId,searchText)
                 }
                 return true
             }
         })
-        val userId = firebaseAuth.currentUser?.uid
-        obtenerEventosFavoritos(userId!!) { listaEventos ->
+
+        return view
+    }
+
+    private fun actualizarListaEventos(userId: String,searchText: String) {
+        obtenerEventosFavoritos(userId,searchText) { listaEventos ->
+            // Limpiar el LinearLayout antes de agregar nuevas tarjetas
+            linearLayout.removeAllViews()
             if (listaEventos != null) {
                 // La lista de eventos se obtuvo exitosamente
                 // Itera sobre la lista de eventos y agrega dinámicamente los elementos al LinearLayout
-
-                val listaEventosFiltrada = listaEventos.filter { it -> it.ciudad == searchText  }
                 for (evento in listaEventos) {
+                    // Código para agregar tarjetas de eventos aquí
                     // Crear el diseño de la tarjeta
                     val cardView = CardView(requireContext())
                     val cardLayoutParams = LinearLayout.LayoutParams(
@@ -159,9 +171,11 @@ class FavoriteFragment : Fragment() {
                     cardContentLayout.addView(nameTextView)
 
                     // Agregar la fecha del evento a la tarjeta
-                    val iconCalendar: Drawable? = ContextCompat.getDrawable(requireContext(), R.drawable.ic_date)
+                    val iconCalendar: Drawable? =
+                        ContextCompat.getDrawable(requireContext(), R.drawable.ic_date)
                     // Establecer el espacio entre el icono y el texto
-                    val paddingPixels = resources.getDimensionPixelSize(R.dimen.icon_text_padding) // Obtener el tamaño del espacio desde resources
+                    val paddingPixels =
+                        resources.getDimensionPixelSize(R.dimen.icon_text_padding) // Obtener el tamaño del espacio desde resources
 
                     val dateTextView = TextView(requireContext())
                     val dateLayoutParams = LinearLayout.LayoutParams(
@@ -181,7 +195,12 @@ class FavoriteFragment : Fragment() {
                     val formattedDate =
                         inputFormat.parse(evento.date!!)?.let { outputFormat.format(it) }
                     dateTextView.setCompoundDrawablePadding(paddingPixels)
-                    dateTextView.setCompoundDrawablesWithIntrinsicBounds(iconCalendar, null, null, null)
+                    dateTextView.setCompoundDrawablesWithIntrinsicBounds(
+                        iconCalendar,
+                        null,
+                        null,
+                        null
+                    )
                     dateTextView.text = formattedDate
                     dateTextView.gravity = Gravity.START // Alinear a la izquierda
                     dateTextView.textSize = resources.getDimension(R.dimen.card_text_size)
@@ -192,7 +211,8 @@ class FavoriteFragment : Fragment() {
                         )
                     )
                     cardContentLayout.addView(dateTextView)
-                    val iconCity: Drawable? = ContextCompat.getDrawable(requireContext(), R.drawable.ic_location)
+                    val iconCity: Drawable? =
+                        ContextCompat.getDrawable(requireContext(), R.drawable.ic_location)
                     // Agregar la ciudad del evento a la tarjeta
                     val cityTextView = TextView(requireContext())
                     val cityLayoutParams = LinearLayout.LayoutParams(
@@ -219,24 +239,6 @@ class FavoriteFragment : Fragment() {
                     )
                     cardContentLayout.addView(cityTextView)
 
-                    // botón de favorito a la tarjeta
-                    /*
-                    val favoriteButton = ImageView(requireContext())
-                    val buttonLayoutParams = LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                    buttonLayoutParams.setMargins(
-                        resources.getDimensionPixelSize(R.dimen.card_text_margin_horizontal),
-                        resources.getDimensionPixelSize(R.dimen.card_text_margin_vertical),
-                        resources.getDimensionPixelSize(R.dimen.card_text_margin_horizontal),
-                        resources.getDimensionPixelSize(R.dimen.card_text_margin_vertical)
-                    )
-                    favoriteButton.layoutParams = buttonLayoutParams
-                    Picasso.get().load(R.drawable.logo).into(favoriteButton)
-
-                    cardContentLayout.addView(favoriteButton)
-                     */
                     // Configurar el OnClickListener para la tarjeta
                     cardView.setOnClickListener {
 
@@ -255,12 +257,15 @@ class FavoriteFragment : Fragment() {
                 // Ocurrió un error al obtener la lista de eventos
             }
         }
-
-        return view
     }
 
-    fun obtenerEventosFavoritos(userId: String, callback: (List<Evento>?) -> Unit) {
-        val databaseReference = FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/").reference
+    fun obtenerEventosFavoritos(
+        userId: String,
+        searchText: String,
+        callback: (List<Evento>?) -> Unit
+    ) {
+        val databaseReference =
+            FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/").reference
         val favoritosRef = databaseReference.child("favoritos").child(userId)
 
         favoritosRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -288,8 +293,15 @@ class FavoriteFragment : Fragment() {
                         }
                         // Verificar si se han agregado todos los eventos
                         if (listaEventos.size == eventIdList.size) {
-                            // Devolver la lista de eventos a través del callback
-                            callback(listaEventos)
+                            // Filtrar la lista si hay un texto de búsqueda
+                            val listaEventosFiltrada = if (searchText.isNotEmpty()) {
+                                listaEventos.filter {
+                                    it.name!!.toUpperCase().contains(searchText.toUpperCase())
+                                }
+                            } else {
+                                listaEventos
+                            }
+                            callback(listaEventosFiltrada)
                         }
                     }
                 }
@@ -354,6 +366,7 @@ class FavoriteFragment : Fragment() {
             }
         })
     }
+
     private fun saveEventId(eventId: String) {
         val editor = sharedPreferences.edit()
         editor.putString(EVENT_ID_KEY, eventId)

@@ -35,7 +35,7 @@
                     android:id="@+id/toolbar_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ajustes"
+                    android:text="@string/settings"
                     android:textAlignment="center"
                     android:textColor="@color/color_letra"
                     android:textSize="18sp"
@@ -48,7 +48,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="10dp"
-                android:text="Sugerecias"
+                android:text="@string/suggestions"
                 android:textColor="@color/color_principal"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="10dp"
                 android:padding="10dp"
-                android:text="Preguntas frecuentes"
+                android:text="@string/faqs"
                 android:textSize="18dp"
                 app:drawableStartCompat="@drawable/ic_question" />
 
@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="10dp"
                 android:padding="10dp"
-                android:text="Notificaciones"
+                android:text="@string/notifications"
                 android:textSize="18dp"
                 android:clickable="true"
                 app:drawableStartCompat="@drawable/ic_notifica" />
@@ -79,16 +79,18 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="10dp"
                 android:padding="10dp"
-                android:text="Valora nuestra app"
+                android:text="@string/rate_our_app"
                 android:textSize="18dp"
                 app:drawableStartCompat="@drawable/ic_value" />
 
             <TextView
+                android:id="@+id/tSharedApp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="10dp"
                 android:padding="10dp"
-                android:text="Comparte nuestra app"
+                android:clickable="true"
+                android:text="@string/share_our_app"
                 android:textSize="18dp"
                 app:drawableStartCompat="@drawable/ic_share" />
 
@@ -99,7 +101,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="10dp"
-                android:text="General"
+                android:text="@string/general"
                 android:textColor="@color/color_principal"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -110,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="10dp"
                 android:padding="10dp"
-                android:text="Cambiar el idioma"
+                android:text="@string/change_language"
                 android:textSize="18dp"
                 app:drawableStartCompat="@drawable/ic_idioma" />
 
@@ -119,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="10dp"
                 android:padding="10dp"
-                android:text="Consejos legales"
+                android:text="@string/legal_terms"
                 android:textSize="18dp"
                 app:drawableStartCompat="@drawable/ic_legal_advice" />
 
@@ -128,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="10dp"
                 android:padding="10dp"
-                android:text="Síguenos en"
+                android:text="@string/follow_us_on"
                 android:textSize="18dp"
                 app:drawableStartCompat="@drawable/ic_follow" />
 
@@ -137,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="10dp"
                 android:padding="10dp"
-                android:text="Contáctanos"
+                android:text="@string/contact_us"
                 android:textSize="18dp"
                 app:drawableStartCompat="@drawable/ic_contact" />
 
@@ -148,7 +150,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="10dp"
-                android:text="Cuenta"
+                android:text="@string/account"
                 android:textColor="@color/color_principal"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -161,7 +163,7 @@
                 android:clickable="true"
                 android:drawablePadding="10dp"
                 android:padding="10dp"
-                android:text="Cerrar sesión"
+                android:text="@string/logout"
                 android:textSize="18dp"
                 app:drawableStartCompat="@drawable/ic_close_sesion"
                 android:focusable="true" />
@@ -173,7 +175,7 @@
                 android:clickable="true"
                 android:drawablePadding="10dp"
                 android:padding="10dp"
-                android:text="Eliminar mi cuenta"
+                android:text="@string/delete_my_account"
                 android:textSize="18dp"
                 app:drawableStartCompat="@drawable/ic_delete"
                 android:focusable="true" />

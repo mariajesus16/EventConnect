@@ -45,6 +45,7 @@
     <string name="cancel">Cancel</string>
     <string name="get_tickets">Get Tickets</string>
     <string name="yes">Yes</string>
+    <string name="not">Not</string>
     <string name="access_to_buy_ticket">Do you want to access to buy the ticket?</string>
     <string name="add_event">Add Event</string>
     <string name="city">City</string>
@@ -65,4 +66,22 @@
     <string name="google_maps_not_installed">Google Maps is not installed on your device</string>
     <string name="read_less">Read Less</string>
     <string name="read_more">Read More</string>
+    <string name="notifications_disabled">Notifications disabled</string>
+    <string name="notifications_disabled_message">Notifications for this app are disabled. Would you like to enable them now?</string>
+    <string name="share_app">Share app</string>
+    <string name="recommendation_message">I recommend this amazing app!</string>
+    <string name="share_via">Share via</string>
+    <string name="suggestions">Suggestions</string>
+    <string name="faqs">FAQs</string>
+    <string name="notifications">Notifications</string>
+    <string name="rate_our_app">Rate our app</string>
+    <string name="share_our_app">Share our app</string>
+    <string name="general">General</string>
+    <string name="change_language">Change Language</string>
+    <string name="legal_terms">Legal Terms</string>
+    <string name="follow_us_on">Follow us on</string>
+    <string name="contact_us">Contact us</string>
+    <string name="account">Account</string>
+    <string name="logout">Logout</string>
+    <string name="delete_my_account">Delete my account</string>
 </resources>

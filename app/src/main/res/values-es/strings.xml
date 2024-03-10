@@ -37,7 +37,6 @@
     <string name="like">Me gusta</string>
     <string name="my_tickets">Mis entradas</string>
     <string name="logout_success">Sesión cerrada correctamente</string>
-    <string name="settings">Ajustes</string>
     <string name="confirmation">Confirmación</string>
     <string name="confirm_delete_account">¿Estás seguro de que deseas eliminar tu cuenta?</string>
     <string name="delete">Eliminar</string>
@@ -45,6 +44,7 @@
     <string name="cancel">Cancelar</string>
     <string name="get_tickets">Conseguir entradas</string>
     <string name="yes">Sí</string>
+    <string name="not">No</string>
     <string name="access_to_buy_ticket">¿Quieres acceder para comprar la entrada?</string>
     <string name="add_event">Añadir evento</string>
     <string name="city">Ciudad</string>
@@ -65,4 +65,23 @@
     <string name="google_maps_not_installed">Google Maps no está instalado en tu dispositivo</string>
     <string name="read_less">Leer menos</string>
     <string name="read_more">Leer más</string>
+    <string name="notifications_disabled">Notificaciones desactivadas</string>
+    <string name="notifications_disabled_message">Las notificaciones de esta aplicación están desactivadas. ¿Desea habilitarlas ahora?</string>
+    <string name="share_app">Compartir aplicación</string>
+    <string name="recommendation_message">¡Te recomiendo esta increíble aplicación!</string>
+    <string name="share_via">Compartir vía</string>
+    <string name="settings">Ajustes</string>
+    <string name="suggestions">Sugerencias</string>
+    <string name="faqs">Preguntas frecuentes</string>
+    <string name="notifications">Notificaciones</string>
+    <string name="rate_our_app">Valora nuestra app</string>
+    <string name="share_our_app">Comparte nuestra app</string>
+    <string name="general">General</string>
+    <string name="change_language">Cambiar el idioma</string>
+    <string name="legal_terms">Consejos legales</string>
+    <string name="follow_us_on">Síguenos en</string>
+    <string name="contact_us">Contáctanos</string>
+    <string name="account">Cuenta</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="delete_my_account">Eliminar mi cuenta</string>
 </resources>

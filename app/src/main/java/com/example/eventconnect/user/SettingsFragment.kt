@@ -27,6 +27,7 @@ class SettingsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+    private lateinit var compartirApp : TextView
     private lateinit var cerrarSesion: TextView
     private lateinit var borrarCuenta: TextView
     private lateinit var notificaciones : TextView
@@ -76,6 +77,12 @@ class SettingsFragment : Fragment() {
         notificaciones.setOnClickListener {
             showNotificationSettingsDialog()
         }
+
+        compartirApp = view.findViewById(R.id.tSharedApp)
+        compartirApp.setOnClickListener {
+            shareApp()
+        }
+
         return view
     }
 
@@ -139,13 +146,13 @@ class SettingsFragment : Fragment() {
     // Método para mostrar un diálogo de confirmación antes de redirigir al usuario a la configuración
     private fun showNotificationSettingsDialog() {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Notificaciones desactivadas")
-        builder.setMessage("Las notificaciones de esta aplicación están desactivadas. ¿Desea habilitarlas ahora?")
-        builder.setPositiveButton("Sí") { _, _ ->
+        builder.setTitle(getString(R.string.notifications_disabled))
+        builder.setMessage(getString(R.string.notifications_disabled_message))
+        builder.setPositiveButton(getString(R.string.yes)) { _, _ ->
             // Llamar a la función para abrir la configuración de notificaciones
             openNotificationSettings()
         }
-        builder.setNegativeButton("No") { dialog, _ ->
+        builder.setNegativeButton(getString(R.string.not)) { dialog, _ ->
             dialog.dismiss()
         }
         builder.show()
@@ -161,5 +168,12 @@ class SettingsFragment : Fragment() {
     // Función para mostrar un Toast
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+    private fun shareApp() {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_app))
+        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.recommendation_message))
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_via)))
     }
 }
