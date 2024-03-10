@@ -60,5 +60,9 @@
     <string name="image">Imagen</string>
     <string name="select_image">Seleccionar imagen</string>
     <string name="profile_photo_updated_success">Foto de perfil actualizada correctamente</string>
-
+    <string name="about_this_event">Acerca de este evento</string>
+    <string name="location">Ubicación</string>
+    <string name="google_maps_not_installed">Google Maps no está instalado en tu dispositivo</string>
+    <string name="read_less">Leer menos</string>
+    <string name="read_more">Leer más</string>
 </resources>

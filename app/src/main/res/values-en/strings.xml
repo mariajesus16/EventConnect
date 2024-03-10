@@ -60,5 +60,9 @@
     <string name="image">Image</string>
     <string name="select_image">Select Image</string>
     <string name="profile_photo_updated_success">Profile photo updated successfully</string>
-
+    <string name="about_this_event">About this event</string>
+    <string name="location">Location</string>
+    <string name="google_maps_not_installed">Google Maps is not installed on your device</string>
+    <string name="read_less">Read Less</string>
+    <string name="read_more">Read More</string>
 </resources>

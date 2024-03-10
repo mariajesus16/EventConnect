@@ -22,18 +22,14 @@ import com.example.eventconnect.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SettingsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+import android.provider.Settings
 class SettingsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
     private lateinit var cerrarSesion: TextView
     private lateinit var borrarCuenta: TextView
+    private lateinit var notificaciones : TextView
     private lateinit var database: FirebaseDatabase
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var usersRef: DatabaseReference
@@ -43,6 +39,7 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
+        // Cerrar Sesion
         cerrarSesion = view.findViewById(R.id.tCerrarSesion)
         cerrarSesion.setOnClickListener {
             val sharedPreferences: SharedPreferences =
@@ -68,9 +65,16 @@ class SettingsFragment : Fragment() {
             FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/")
         usersRef = database.getReference("usuarios")
 
+        // Borrar cuenta
         borrarCuenta = view.findViewById(R.id.tBorrarCuenta)
         borrarCuenta.setOnClickListener {
             borrarCuentaOnClick()
+        }
+        
+        // Notificaciones
+        notificaciones = view.findViewById(R.id.tNotificaciones)
+        notificaciones.setOnClickListener {
+            showNotificationSettingsDialog()
         }
         return view
     }
@@ -132,7 +136,28 @@ class SettingsFragment : Fragment() {
         dialogBuilder?.create()?.show()
     }
 
+    // Método para mostrar un diálogo de confirmación antes de redirigir al usuario a la configuración
+    private fun showNotificationSettingsDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Notificaciones desactivadas")
+        builder.setMessage("Las notificaciones de esta aplicación están desactivadas. ¿Desea habilitarlas ahora?")
+        builder.setPositiveButton("Sí") { _, _ ->
+            // Llamar a la función para abrir la configuración de notificaciones
+            openNotificationSettings()
+        }
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.show()
+    }
 
+    // Método para abrir la configuración de notificaciones
+    private fun openNotificationSettings() {
+        val intent = Intent()
+        intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+        intent.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+        startActivity(intent)
+    }
     // Función para mostrar un Toast
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

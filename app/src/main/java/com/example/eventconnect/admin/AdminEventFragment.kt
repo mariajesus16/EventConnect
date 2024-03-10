@@ -1,12 +1,12 @@
-package com.example.eventconnect.user
+package com.example.eventconnect.admin
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +14,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import com.example.eventconnect.Evento
 import com.example.eventconnect.R
 import com.google.firebase.auth.FirebaseAuth
@@ -31,8 +29,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class EventFragment : Fragment() {
-
+class AdminEventFragment : Fragment() {
     private lateinit var database: FirebaseDatabase
     private lateinit var storageRef: StorageReference
     private lateinit var firebaseAuth: FirebaseAuth
@@ -46,8 +43,6 @@ class EventFragment : Fragment() {
     private lateinit var infoEvento: TextView
 
     private lateinit var btnOpenMap: Button
-    private lateinit var btnFavo : ImageView
-
     private val EVENT_ID_KEY = "eventId"
     private var eventId: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +55,7 @@ class EventFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_event, container, false)
+        val view = inflater.inflate(R.layout.fragment_admin_event, container, false)
 
         sharedPreferences =
             requireActivity().getSharedPreferences("event_prefs", Context.MODE_PRIVATE)
@@ -79,7 +74,6 @@ class EventFragment : Fragment() {
         lugarEvento = view.findViewById(R.id.lugarEvento)
         infoEvento = view.findViewById(R.id.infoEvento)
         btnOpenMap = view.findViewById(R.id.btnOpenMap)
-        btnFavo = view.findViewById(R.id.heartIcon)
 
         eventId = getSavedEventId()
         eventId?.let { it1 ->
@@ -94,10 +88,7 @@ class EventFragment : Fragment() {
 
                 val readMoreTextView: TextView = view.findViewById(R.id.readMoreText)
 
-                if(infoEvento.lineCount < 2){
-                    readMoreTextView.isEnabled = false
-                    readMoreTextView.text = ""
-                }
+                readMoreTextView.isEnabled = infoEvento.lineCount > 2
 
                 readMoreTextView.setOnClickListener {
                     if (infoEvento.maxLines == 2) {
@@ -108,23 +99,6 @@ class EventFragment : Fragment() {
                         readMoreTextView.text = getString(R.string.read_more)
                     }
                 }
-                val userId = firebaseAuth.currentUser?.uid
-                val eventId = evento.id
-
-                if (userId != null) {
-                    isEventFavorite(userId, eventId!!) { isFavorite ->
-                        if (isFavorite) {
-                            btnFavo.setBackgroundResource(R.drawable.ic_favorite_filled)
-                        } else {
-                            btnFavo.setBackgroundResource(R.drawable.ic_favorite_outline)
-                        }
-                    }
-                }
-
-                btnFavo.setOnClickListener {
-                    toggleFavoriteStatus(evento.id!!)
-                }
-
                 btnOpenMap.setOnClickListener {
                     val lugarEvento = evento.lugar // Obtén la ubicación del evento aquí
 
@@ -146,24 +120,7 @@ class EventFragment : Fragment() {
         }
         return view
     }
-    fun isEventFavorite(userId: String, eventId: String, callback: (Boolean) -> Unit) {
-        val databaseReference =
-            FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/").reference
-        val favoritesRef = databaseReference.child("favoritos").child(userId).child(eventId)
 
-        // Verificar si el evento está marcado como favorito para el usuario
-        favoritesRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Llamar al callback con true si el evento está marcado como favorito, false en caso contrario
-                callback(dataSnapshot.exists() && dataSnapshot.getValue(Boolean::class.java) == true)
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Manejar errores si es necesario
-                callback(false) // Llamar al callback con false en caso de error
-            }
-        })
-    }
     private fun getEventFromFirebase(eventId: String, callback: (Evento?) -> Unit) {
         val databaseReference =
             FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/").reference
@@ -216,40 +173,7 @@ class EventFragment : Fragment() {
             ""
         }
     }
-    private fun toggleFavoriteStatus(eventoId : String) {
-        val currentUser = firebaseAuth.currentUser
-        val databaseReference =
-            FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/").reference
 
-        if (currentUser != null) {
-            val userId = currentUser.uid
-            val eventId = eventoId // Suponiendo que tienes un campo id en tu clase Evento
-
-            // Obtener una referencia a la entrada de favoritos del usuario para este evento
-            val favoritesRef = databaseReference.child("favoritos").child(userId).child(eventId)
-
-            // Verificar si el evento ya está marcado como favorito
-            favoritesRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        // El evento ya está marcado como favorito, por lo que se elimina de favoritos
-                        favoritesRef.removeValue()
-                        // Aquí cambias el icono del botón a "No Favorito"
-                        btnFavo.setBackgroundResource(R.drawable.ic_favorite_outline)
-                    } else {
-                        // El evento aún no se ha marcado como favorito, por lo que se agrega a favoritos
-                        favoritesRef.setValue(true)
-                        // Aquí cambias el icono del botón a "Favorito"
-                        btnFavo.setBackgroundResource(R.drawable.ic_favorite_filled)
-                    }
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    // Manejar errores si es necesario
-                }
-            })
-        }
-    }
     private fun showToast(messageResId: Int) {
         Toast.makeText(requireContext(), getString(messageResId), Toast.LENGTH_SHORT).show()
     }

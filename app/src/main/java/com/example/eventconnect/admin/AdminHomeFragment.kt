@@ -1,5 +1,6 @@
 package com.example.eventconnect.admin
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -29,6 +30,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 
@@ -49,11 +51,12 @@ class AdminHomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        val view = inflater.inflate(R.layout.fragment_admin_home, container, false)
         sharedPreferences =
             requireActivity().getSharedPreferences("event_prefs", Context.MODE_PRIVATE)
         firebaseAuth = FirebaseAuth.getInstance()
@@ -95,6 +98,22 @@ class AdminHomeFragment : Fragment() {
 
                 val listaEventosFiltrada = listaEventos.filter { it -> it.ciudad == searchText  }
                 for (evento in listaEventos) {
+                    // Fecha actual
+                    val currentDate = Date()
+                    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val formattedDate = dateFormat.format(currentDate)
+                    // Formatear la fecha
+                    val inputFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                    val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val formattedDateEvento = inputFormat.parse(evento.date!!)?.let { outputFormat.format(it) }
+
+                    if (formattedDateEvento != null && formattedDateEvento > formattedDate) {
+                        // La fecha del evento es posterior a la fecha actual
+                        // Realiza las acciones necesarias aquí
+                    } else {
+                        // La fecha del evento es anterior o igual a la fecha actual
+                        // Realiza las acciones necesarias aquí
+                    }
                     // Crear el diseño de la tarjeta
                     val cardView = CardView(requireContext())
                     val cardLayoutParams = LinearLayout.LayoutParams(
@@ -171,11 +190,6 @@ class AdminHomeFragment : Fragment() {
                         resources.getDimensionPixelSize(R.dimen.card_text_margin_vertical)
                     )
                     dateTextView.layoutParams = dateLayoutParams
-                    // Formatear la fecha
-                    val inputFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                    val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                    val formattedDate =
-                        inputFormat.parse(evento.date!!)?.let { outputFormat.format(it) }
 
                     dateTextView.text = formattedDate
                     dateTextView.gravity = Gravity.START // Alinear a la izquierda

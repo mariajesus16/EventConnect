@@ -58,7 +58,6 @@ class EventActivity : AppCompatActivity() {
                 // Acción cuando se selecciona "Sí"
                 // Abrir el enlace del evento en un navegador web
 
-
                 eventId?.let { it1 ->
                     getEventFromFirebase(it1) { evento ->
                         val url = evento?.link
@@ -78,27 +77,27 @@ class EventActivity : AppCompatActivity() {
     }
 
     private fun getEventFromFirebase(eventId: String, callback: (Evento?) -> Unit) {
-        val eventQuery = eventosRef.child(eventId)
-        eventQuery.addListenerForSingleValueEvent(object : ValueEventListener {
+        val databaseReference =
+            FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/").reference
+        val eventosRef = databaseReference.child("eventos").child(eventId)
+
+        eventosRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 // Verificar si existe un evento con el ID proporcionado
                 if (snapshot.exists()) {
                     // Obtener los datos del evento
-                    val ciudad = snapshot.child("ciudad").getValue(String::class.java)
-                    val date = snapshot.child("date").getValue(String::class.java)
-                    val info = snapshot.child("info").getValue(String::class.java)
-                    val link = snapshot.child("link").getValue(String::class.java)
-                    val lugar = snapshot.child("lugar").getValue(String::class.java)
-                    val name = snapshot.child("name").getValue(String::class.java)
-                    val imageUrl = snapshot.child("imagenUrl").getValue(String::class.java)
-                    if (ciudad != null && date != null && info != null &&
-                        link != null && lugar != null && name != null && imageUrl != null
-                    ) {
-                        val evento =
-                            Evento(eventId, ciudad, date, info, link, lugar, name, imageUrl)
-                        callback(evento)
-                    }
-                    // Aquí puedes usar los datos del evento según sea necesario
+                    val ciudad = snapshot.child("ciudad").getValue(String::class.java) ?: ""
+                    val date = snapshot.child("date").getValue(String::class.java) ?: ""
+                    val info = snapshot.child("info").getValue(String::class.java) ?: ""
+                    val link = snapshot.child("link").getValue(String::class.java) ?: ""
+                    val lugar = snapshot.child("lugar").getValue(String::class.java) ?: ""
+                    val name = snapshot.child("name").getValue(String::class.java) ?: ""
+                    val imageUrl = snapshot.child("imagenUrl").getValue(String::class.java) ?: ""
+
+                    // Crear un objeto Evento con los datos obtenidos
+                    val evento = Evento(eventId, name, ciudad, lugar, link, info, date, imageUrl)
+                    // Devolver el objeto Evento a través del callback
+                    callback(evento)
                 } else {
                     // El evento con el ID proporcionado no existe
                     callback(null)
@@ -106,10 +105,10 @@ class EventActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
+                // Ocurrió un error al obtener los datos, devolver null
                 callback(null)
             }
         })
-
     }
 
     private fun loadFragment(fragment: Fragment) {

@@ -24,14 +24,11 @@ class MenuActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.home -> {
                     loadFragment(HomeFragment())
+
                     true
                 }
                 R.id.favorite -> {
                     loadFragment(FavoriteFragment())
-                    true
-                }
-                R.id.tickets -> {
-                    loadFragment(TicketsFragment())
                     true
                 }
                 R.id.perfil -> {

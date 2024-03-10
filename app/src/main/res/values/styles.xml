@@ -17,6 +17,20 @@
         <item name="endIconTint">@color/color_principal</item>
         <item name="startIconTint">@color/color_principal</item>
     </style>
+    <style name="btnTickets" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <!-- Color de fondo del cuadro del TextInputLayout -->
+        <item name="boxBackgroundColor">@color/color_letra</item>
+
+        <!-- Color del borde del cuadro del TextInputLayout -->
+        <item name="boxStrokeColor">@color/color_principal</item>
+
+        <!-- Color del texto de la etiqueta -->
+        <item name="android:textColor">@color/color_principal</item>
+
+        <item name="hintTextColor">@color/color_letra</item>
+        <item name="endIconTint">@color/color_principal</item>
+        <item name="startIconTint">@color/color_principal</item>
+    </style>
 
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
         <item name="android:layout_width">wrap_content</item>
@@ -25,5 +39,10 @@
         <item name="android:iconifiedByDefault">false</item>
         <item name="android:queryBackground">@android:color/transparent</item>
         <item name="android:queryHint">@string/search_hint</item>
+    </style>
+
+    <style name="ToolbarTransparent" parent="Widget.AppCompat.Toolbar">
+        <!-- Otros atributos de estilo que puedas tener -->
+        <item name="android:background">@android:color/transparent</item>
     </style>
 </resources>

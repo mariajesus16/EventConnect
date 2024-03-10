@@ -10,11 +10,6 @@
         android:icon="@drawable/ic_favorite"
         android:title=""/>
     <item
-        android:id="@+id/tickets"
-        android:enabled="true"
-        android:icon="@drawable/ic_tickets"
-        android:title=""/>
-    <item
         android:id="@+id/perfil"
         android:enabled="true"
         android:icon="@drawable/ic_perfil"

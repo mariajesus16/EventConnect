@@ -49,8 +49,10 @@ class AdminAddImagenEventFragment : Fragment() {
     private lateinit var imagenEvento : ImageView
     private lateinit var btnAnterior : Button
     private lateinit var btnAddEvent : Button
-    private var rotatedBitmap : Bitmap? = null
+
     private val PICK_IMAGE_REQUEST = 1
+    private var selectedImageUri: Uri? = null
+    private var rotatedBitmap : Bitmap? = null
 
     private var evento: Evento? = null
     interface ActivityListener {
@@ -120,24 +122,38 @@ class AdminAddImagenEventFragment : Fragment() {
             intent.type = "image/*"
             intent.action = Intent.ACTION_GET_CONTENT
             startActivityForResult(
-                Intent.createChooser(intent, "Select Image"),
+                Intent.createChooser(intent, getString(R.string.select_image)),
                 PICK_IMAGE_REQUEST
             )
         }
-
-        if (evento!!.id == ""){
-            // Cargar la imagen del evento
-            cargarImagenEvento(evento!!.id!!)
-        }
+        btnAddEvent.isEnabled = false
 
         btnAddEvent.setOnClickListener {
-            addEvent(evento!!)
-            // Actualizar la foto de perfil del usuario en Firebase
-            actualizarImagenEvento(evento!!.id, rotatedBitmap!!)
+            // Generar un nuevo ID para el evento
+            val eventoId = eventosRef.push().key
+            // Aquí deberías obtener la URI de la imagen seleccionada
+            if (selectedImageUri != null) {
+                // Subir la imagen a Firebase Storage
+                uploadImageToFirebaseStorage(eventoId,selectedImageUri!!) { imageUrl ->
+                    // Una vez que se ha completado la subida de la imagen y se ha obtenido la URL de descarga
+                    if (!imageUrl.isNullOrEmpty()) {
+                        val intent = Intent(requireActivity(), AdminMenuActivity::class.java)
+                        startActivity(intent)
 
-            showToast(R.string.profile_photo_updated_success)
-            val intent = Intent(requireActivity(), AdminMenuActivity::class.java)
-            startActivity(intent)
+                        // Actualizar la URL de la imagen en el evento
+                        evento?.imagenUrl = imageUrl
+
+                        // Agregar el evento a Firebase Realtime Database
+                        addEvent(evento!!,eventoId)
+
+
+                    } else {
+                        //showToast(R.string.image_upload_error)
+                    }
+                }
+            } else {
+                //showToast(R.string.image_selection_error)
+            }
         }
 
         return view
@@ -148,12 +164,9 @@ class AdminAddImagenEventFragment : Fragment() {
         activityListener = null // Evitar referencias a la actividad después de la desconexión
     }
 
-    private fun addEvent(evento: Evento) {
+    private fun addEvent(evento: Evento,eventoId : String?) {
         val databaseReference = FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/").reference
         val eventosRef = databaseReference.child("eventos")
-
-        // Generar un nuevo ID para el evento
-        val eventoId = eventosRef.push().key
 
         // Verificar si se generó correctamente el ID
         if (eventoId != null) {
@@ -181,11 +194,11 @@ class AdminAddImagenEventFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
-            val selectedImageUri: Uri = data.data!!
+            selectedImageUri = data.data!!
 
             try {
                 // Obtener la orientación de la imagen
-                val inputStream = requireContext().contentResolver.openInputStream(selectedImageUri)
+                val inputStream = requireContext().contentResolver.openInputStream(selectedImageUri!!)
                 val exif = ExifInterface(inputStream!!)
                 val orientation =
                     exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
@@ -199,92 +212,53 @@ class AdminAddImagenEventFragment : Fragment() {
                 }
 
                 // Rotar la imagen antes de cargarla
-                rotatedBitmap = rotateBitmap(selectedImageUri, rotation)
+                rotatedBitmap = rotateBitmap(selectedImageUri!!, rotation)
 
-                // Guardar la imagen rotada en un archivo temporal
-                val rotatedImageFile = saveBitmapToTempFile(rotatedBitmap!!)
+                imagenEvento.setImageBitmap(rotatedBitmap)
 
-                // Cargar la imagen utilizando Picasso y aplicar la transformación circular
-                Picasso.get()
-                    .load(rotatedImageFile)
-                    .into(imagenEvento)
-
+                btnAddEvent.isEnabled = true
 
             } catch (e: IOException) {
                 e.printStackTrace()
             }
         }
     }
-    fun actualizarImagenEvento(eventoId: String?, bitmap: Bitmap) {
-        // Verificar que el eventoId no sea nulo
+    private fun uploadImageToFirebaseStorage(eventoId :String?,imageUri: Uri, callback: (String?) -> Unit) {
+        // Verificar que el ID del evento no sea nulo
         if (eventoId != null) {
-            // Subir la imagen a Firebase Storage y obtener la URL de descarga
-            val baos = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-            val imageData: ByteArray = baos.toByteArray()
+            // Generar un nombre único para la imagen en Firebase Storage
+            val storageRef = FirebaseStorage.getInstance("gs://eventconnect-150ed.appspot.com").reference
 
-            storageRef.child("eventsImages/$eventoId").putBytes(imageData)
+            // Crear una referencia específica para la imagen del evento dentro de la carpeta eventsImages
+            val ref = storageRef.child("eventsImages/${eventoId}.jpg")
+
+            // Subir la imagen a Firebase Storage
+            ref.putFile(imageUri)
                 .addOnSuccessListener { taskSnapshot ->
-                    taskSnapshot.storage.downloadUrl.addOnSuccessListener { uri ->
+                    // Obtener la URL de descarga de la imagen subida
+                    ref.downloadUrl.addOnSuccessListener { uri ->
                         val imageUrl = uri.toString()
-
-                        // Actualizar la URL de la foto de perfil en Firebase Realtime Database
-                        eventosRef.child(eventoId).child("imagenUrl")
-                            .setValue(imageUrl)
-                            .addOnSuccessListener {
-                                // Foto de perfil actualizada correctamente
-                            }
-                            .addOnFailureListener { e ->
-                                // Error al actualizar la foto de perfil
-                                e.printStackTrace()
-                            }
+                        callback(imageUrl) // Llamar a la devolución de llamada con la URL de descarga
                     }
                 }
                 .addOnFailureListener { e ->
-                    // Error al subir la imagen a Firebase Storage
+                    // Manejar errores de subida de la imagen
                     e.printStackTrace()
+                    callback(null) // Llamar a la devolución de llamada con un valor nulo en caso de error
                 }
+        } else {
+            // Manejar el caso en el que el ID del evento sea nulo
+            Log.e("FirebaseStorageError", "El ID del evento es nulo.")
+            callback(null) // Llamar a la devolución de llamada con un valor nulo
         }
     }
-    fun cargarImagenEvento(eventId: String) {
-        val databaseReference = FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/").reference
-        val eventosRef = databaseReference.child("eventos")
 
-        // Lee la URL de la foto de perfil del usuario desde Firebase Realtime Database
-        eventosRef.child(eventId).child("imagenUrl")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val imageUrl = dataSnapshot.value as String?
 
-                    // Carga de imagen en la ImageView
-                    if (!imageUrl.isNullOrEmpty()) {
-                        // Carga la imagen utilizando Picasso y aplica la transformación circular
-                        Picasso.get()
-                            .load(imageUrl)
-                            .into(imagenEvento)
-                    }
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    // Error al leer la URL de la foto de perfil del usuario desde Firebase Realtime Database
-                    databaseError.toException().printStackTrace()
-                }
-            })
-    }
     private fun rotateBitmap(uri: Uri, degrees: Int): Bitmap {
         val inputStream = requireContext().contentResolver.openInputStream(uri)
         val bitmap = BitmapFactory.decodeStream(inputStream)
         val matrix = Matrix().apply { postRotate(degrees.toFloat()) }
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-    }
-
-    private fun saveBitmapToTempFile(bitmap: Bitmap): File {
-        val tempFile = File.createTempFile("temp_image", ".jpg", requireContext().cacheDir)
-        val outputStream = FileOutputStream(tempFile)
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-        outputStream.flush()
-        outputStream.close()
-        return tempFile
     }
     private fun showToast(messageResId: Int) {
         Toast.makeText(requireContext(), getString(messageResId), Toast.LENGTH_SHORT).show()

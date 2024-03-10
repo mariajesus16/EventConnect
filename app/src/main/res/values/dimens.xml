@@ -23,4 +23,6 @@
     <dimen name="card_text_name_size">7sp</dimen>
     <!-- Altura de la imagen en la tarjeta -->
     <dimen name="card_image_height">200dp</dimen>
+    <dimen name="icon_text_padding">8dp</dimen>
+
 </resources>

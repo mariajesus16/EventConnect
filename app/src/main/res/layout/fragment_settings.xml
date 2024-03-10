@@ -64,12 +64,14 @@
                 app:drawableStartCompat="@drawable/ic_question" />
 
             <TextView
+                android:id="@+id/tNotificaciones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="10dp"
                 android:padding="10dp"
                 android:text="Notificaciones"
                 android:textSize="18dp"
+                android:clickable="true"
                 app:drawableStartCompat="@drawable/ic_notifica" />
 
             <TextView

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -164,6 +165,10 @@ class HomeFragment : Fragment() {
                     cardContentLayout.addView(nameTextView)
 
                     // Agregar la fecha del evento a la tarjeta
+                    val iconCalendar: Drawable? = ContextCompat.getDrawable(requireContext(), R.drawable.ic_date)
+                    // Establecer el espacio entre el icono y el texto
+                    val paddingPixels = resources.getDimensionPixelSize(R.dimen.icon_text_padding) // Obtener el tamaño del espacio desde resources
+
                     val dateTextView = TextView(requireContext())
                     val dateLayoutParams = LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
@@ -178,10 +183,11 @@ class HomeFragment : Fragment() {
                     dateTextView.layoutParams = dateLayoutParams
                     // Formatear la fecha
                     val inputFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                    val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val outputFormat = SimpleDateFormat("EEE, MMM d · HH:mm z", Locale.getDefault())
                     val formattedDate =
                         inputFormat.parse(evento.date!!)?.let { outputFormat.format(it) }
-
+                    dateTextView.setCompoundDrawablePadding(paddingPixels)
+                    dateTextView.setCompoundDrawablesWithIntrinsicBounds(iconCalendar, null, null, null)
                     dateTextView.text = formattedDate
                     dateTextView.gravity = Gravity.START // Alinear a la izquierda
                     dateTextView.textSize = resources.getDimension(R.dimen.card_text_size)
@@ -192,7 +198,7 @@ class HomeFragment : Fragment() {
                         )
                     )
                     cardContentLayout.addView(dateTextView)
-
+                    val iconCity: Drawable? = ContextCompat.getDrawable(requireContext(), R.drawable.ic_location)
                     // Agregar la ciudad del evento a la tarjeta
                     val cityTextView = TextView(requireContext())
                     val cityLayoutParams = LinearLayout.LayoutParams(
@@ -206,6 +212,8 @@ class HomeFragment : Fragment() {
                         resources.getDimensionPixelSize(R.dimen.card_text_margin_vertical)
                     )
                     cityTextView.layoutParams = cityLayoutParams
+                    cityTextView.setCompoundDrawablePadding(paddingPixels)
+                    cityTextView.setCompoundDrawablesWithIntrinsicBounds(iconCity, null, null, null)
                     cityTextView.text = evento.ciudad
                     cityTextView.gravity = Gravity.START // Alinear a la izquierda
                     cityTextView.textSize = resources.getDimension(R.dimen.card_text_size)
@@ -296,31 +304,10 @@ class HomeFragment : Fragment() {
         })
     }
 
-
-
-    fun guardarFavorito(userId: String?, eventId: String) {
-        val favoriteId = favoritesRef.push().key // Generar una nueva clave para el favorito
-
-        // Verificar si se ha proporcionado un ID de usuario válido
-        if (userId != null && !userId.isEmpty()) {
-
-            // Guardar el favorito en la base de datos
-            favoritesRef.child(favoriteId ?: "").child("userId").setValue(userId)
-            favoritesRef.child(favoriteId ?: "").child("eventId").setValue(eventId)
-                .addOnSuccessListener {
-                    // La relación de favoritos se guardó exitosamente
-                    // Aquí puedes mostrar un mensaje de éxito si lo deseas
-                }
-                .addOnFailureListener { exception ->
-                    // Error al guardar el favorito
-                    // Aquí puedes manejar el error adecuadamente
-                }
-        }
-    }
-
     // Función para cargar la URL de la imagen de un evento desde Firebase Realtime Database
     fun cargarImagenEvento(eventoId: String, listener: (String?) -> Unit) {
-        val database = FirebaseDatabase.getInstance()
+        val database =
+            FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/")
         val eventoRef = database.reference.child("eventos").child(eventoId)
 
         eventoRef.child("imagenUrl").addListenerForSingleValueEvent(object : ValueEventListener {
