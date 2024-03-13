@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.SearchView
 import android.widget.TextView
@@ -28,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -131,15 +133,39 @@ class HomeFragment : Fragment() {
                         resources.getDimensionPixelSize(R.dimen.card_image_height)
                     )
                     imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+
+                    // Agregar un indicador de carga (ProgressBar)
+                    val progressBar = ProgressBar(requireContext())
+                    val progressBarParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+
+                    progressBarParams.gravity = Gravity.CENTER
+                    progressBar.layoutParams = progressBarParams
+                    cardContentLayout.addView(progressBar)
+
                     cargarImagenEvento(evento.id!!) { imageUrl ->
                         if (!imageUrl.isNullOrEmpty()) {
                             // La URL de la imagen no está vacía, la cargamos en el ImageView
-                            Picasso.get().load(imageUrl).into(imageView)
+                            Picasso.get().load(imageUrl).into(imageView, object : Callback {
+                                override fun onSuccess() {
+                                    // Si la carga es exitosa, oculta el indicador de carga
+                                    progressBar.visibility = View.GONE
+                                }
+
+                                override fun onError(e: Exception?) {
+                                    // Si hay un error en la carga, también oculta el indicador de carga
+                                    progressBar.visibility = View.GONE
+                                }
+                            })
                         } else {
                             // La URL de la imagen es nula o vacía, cargamos una imagen de error
+                            progressBar.visibility = View.GONE
                             Picasso.get().load(R.drawable.logo).into(imageView)
                         }
                     }
+
                     cardContentLayout.addView(imageView)
 
                     // Agregar el nombre del evento a la tarjeta

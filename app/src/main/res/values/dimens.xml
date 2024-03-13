@@ -25,4 +25,7 @@
     <dimen name="card_image_height">200dp</dimen>
     <dimen name="icon_text_padding">8dp</dimen>
 
+    <dimen name="card_margin_horizontal_perfil">8dp</dimen>
+    <dimen name="card_margin_vertical_peril">4dp</dimen>
+    <dimen name="card_image_width_perfil">200dp</dimen>
 </resources>

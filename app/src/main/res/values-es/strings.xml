@@ -84,4 +84,9 @@
     <string name="account">Cuenta</string>
     <string name="logout">Cerrar sesión</string>
     <string name="delete_my_account">Eliminar mi cuenta</string>
+    <string name="confirm_logout">¿Estás seguro de que quieres cerrar la sesión?</string>
+    <string name="delete_event">Borrar evento</string>
+    <string name="delete_event_error">Error al borrar el evento.</string>
+    <string name="event_deleted_success">Evento borrado exitosamente.</string>
+    <string name="confirm_delete_event">¿Estás seguro de que deseas borrar este evento?</string>
 </resources>

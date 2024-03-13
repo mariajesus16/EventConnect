@@ -13,6 +13,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbarAddEvent"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <ImageView
+                    android:id="@+id/logoImageView"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:contentDescription="Logo"
+                    android:src="@drawable/logo" />
+                <ImageView
+                    android:id="@+id/deleteEvent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="@string/delete_event"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_delete"/>
+                <ImageView
+                    android:id="@+id/editEvent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="@string/delete_event"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_edit"/>
+            </androidx.appcompat.widget.Toolbar>
 
             <ImageView
                 android:id="@+id/imageEvento"

@@ -11,8 +11,8 @@
         android:icon="@drawable/ic_add_event"
         android:title=""/>
     <item
-        android:id="@+id/settings"
+        android:id="@+id/close_sesion"
         android:enabled="true"
-        android:icon="@drawable/ic_settings"
+        android:icon="@drawable/ic_close_sesion"
         android:title=""/>
 </menu>

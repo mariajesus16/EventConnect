@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
@@ -34,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -115,10 +117,10 @@ class PerfilFragment : Fragment() {
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     )
                     cardLayoutParams.setMargins(
-                        resources.getDimensionPixelSize(R.dimen.card_margin_horizontal),
-                        resources.getDimensionPixelSize(R.dimen.card_margin_vertical),
-                        resources.getDimensionPixelSize(R.dimen.card_margin_horizontal),
-                        resources.getDimensionPixelSize(R.dimen.card_margin_vertical)
+                        resources.getDimensionPixelSize(R.dimen.card_margin_horizontal_perfil),
+                        resources.getDimensionPixelSize(R.dimen.card_margin_vertical_peril),
+                        resources.getDimensionPixelSize(R.dimen.card_margin_horizontal_perfil),
+                        resources.getDimensionPixelSize(R.dimen.card_margin_vertical_peril)
                     )
                     cardView.layoutParams = cardLayoutParams
                     cardView.cardElevation = resources.getDimension(R.dimen.card_elevation)
@@ -131,20 +133,45 @@ class PerfilFragment : Fragment() {
                     // Agregar la imagen del evento a la tarjeta
                     val imageView = ImageView(requireContext())
                     imageView.layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        resources.getDimensionPixelSize(R.dimen.card_image_width_perfil),
                         resources.getDimensionPixelSize(R.dimen.card_image_height)
                     )
                     imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                    // Agregar un indicador de carga (ProgressBar)
+                    val progressBar = ProgressBar(requireContext())
+                    val progressBarParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+
+                    progressBarParams.gravity = Gravity.CENTER
+                    progressBar.layoutParams = progressBarParams
+                    cardContentLayout.addView(progressBar)
+
                     cargarImagenEvento(evento.id!!) { imageUrl ->
                         if (!imageUrl.isNullOrEmpty()) {
                             // La URL de la imagen no está vacía, la cargamos en el ImageView
-                            Picasso.get().load(imageUrl).into(imageView)
+                            Picasso.get().load(imageUrl).into(imageView, object : Callback {
+                                override fun onSuccess() {
+                                    // Si la carga es exitosa, oculta el indicador de carga
+                                    progressBar.visibility = View.GONE
+                                }
+
+                                override fun onError(e: Exception?) {
+                                    // Si hay un error en la carga, también oculta el indicador de carga
+                                    progressBar.visibility = View.GONE
+                                }
+                            })
                         } else {
                             // La URL de la imagen es nula o vacía, cargamos una imagen de error
+                            progressBar.visibility = View.GONE
                             Picasso.get().load(R.drawable.logo).into(imageView)
                         }
                     }
+
                     cardContentLayout.addView(imageView)
+
+                    cardView.addView(cardContentLayout)
 
                     // Agregar la tarjeta al contenedor lineal
                     linearLayout.addView(cardView)
@@ -191,7 +218,7 @@ class PerfilFragment : Fragment() {
                 // Actualizar la foto de perfil del usuario en Firebase
                 actualizarFotoPerfilUsuario(userId, rotatedBitmap)
 
-                showToast("Foto de perfil actualizada correctamente")
+                showToast(getString(R.string.profile_photo_updated_success))
 
             } catch (e: IOException) {
                 e.printStackTrace()

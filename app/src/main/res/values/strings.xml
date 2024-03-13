@@ -85,4 +85,9 @@
     <string name="account">Account</string>
     <string name="logout">Logout</string>
     <string name="delete_my_account">Delete my account</string>
+    <string name="confirm_logout">Are you sure you want to logout?</string>
+    <string name="delete_event">Delete Event</string>
+    <string name="delete_event_error">Error deleting event.</string>
+    <string name="event_deleted_success">Event deleted successfully.</string>
+    <string name="confirm_delete_event">¿Estás seguro de que deseas borrar este evento?</string>
 </resources>

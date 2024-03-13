@@ -1,7 +1,9 @@
 package com.example.eventconnect.admin
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
@@ -15,6 +17,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.example.eventconnect.Evento
+import com.example.eventconnect.MainActivity
 import com.example.eventconnect.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -43,6 +46,8 @@ class AdminEventFragment : Fragment() {
     private lateinit var infoEvento: TextView
 
     private lateinit var btnOpenMap: Button
+    private lateinit var btnDeleteEvent : ImageView
+    private lateinit var btnEditEvent : ImageView
     private val EVENT_ID_KEY = "eventId"
     private var eventId: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +79,8 @@ class AdminEventFragment : Fragment() {
         lugarEvento = view.findViewById(R.id.lugarEvento)
         infoEvento = view.findViewById(R.id.infoEvento)
         btnOpenMap = view.findViewById(R.id.btnOpenMap)
+        btnDeleteEvent = view.findViewById(R.id.deleteEvent)
+        btnEditEvent = view.findViewById(R.id.editEvent)
 
         eventId = getSavedEventId()
         eventId?.let { it1 ->
@@ -88,7 +95,10 @@ class AdminEventFragment : Fragment() {
 
                 val readMoreTextView: TextView = view.findViewById(R.id.readMoreText)
 
-                readMoreTextView.isEnabled = infoEvento.lineCount > 2
+                if(infoEvento.lineCount < 2){
+                    readMoreTextView.isEnabled = false
+                    readMoreTextView.text = ""
+                }
 
                 readMoreTextView.setOnClickListener {
                     if (infoEvento.maxLines == 2) {
@@ -99,6 +109,16 @@ class AdminEventFragment : Fragment() {
                         readMoreTextView.text = getString(R.string.read_more)
                     }
                 }
+
+                // En desarrollo
+                btnEditEvent.setOnClickListener {
+
+                }
+
+                btnDeleteEvent.setOnClickListener {
+                    borrarEvento(evento.id!!)
+                }
+
                 btnOpenMap.setOnClickListener {
                     val lugarEvento = evento.lugar // Obtén la ubicación del evento aquí
 
@@ -173,7 +193,33 @@ class AdminEventFragment : Fragment() {
             ""
         }
     }
-
+    private fun borrarEvento(eventId: String) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(getString(R.string.confirmation))
+        builder.setMessage(getString(R.string.confirm_delete_event))
+        builder.setPositiveButton(getString(R.string.yes)) { dialogInterface: DialogInterface, _: Int ->
+            // Borrar el evento de Firebase Realtime Database
+            val databaseReference =
+                FirebaseDatabase.getInstance("https://eventconnect-150ed-default-rtdb.europe-west1.firebasedatabase.app/").reference
+            val eventosRef = databaseReference.child("eventos").child(eventId)
+            eventosRef.removeValue()
+                .addOnSuccessListener {
+                    // El evento se borró correctamente
+                    showToast(R.string.event_deleted_success)
+                    val intent = Intent(requireContext(), AdminMenuActivity::class.java)
+                    startActivity(intent)
+                }
+                .addOnFailureListener {
+                    // Error al borrar el evento
+                    showToast(R.string.delete_event_error)
+                }
+            dialogInterface.dismiss()
+        }
+        builder.setNegativeButton(getString(R.string.not)) { dialogInterface: DialogInterface, _: Int ->
+            dialogInterface.dismiss()
+        }
+        builder.show()
+    }
     private fun showToast(messageResId: Int) {
         Toast.makeText(requireContext(), getString(messageResId), Toast.LENGTH_SHORT).show()
     }
